@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0-*",
+  "name": "Codestellation.Statsd",
+  "title": "Codestellation Statsd",
+  "description": "Blazingly Fast Statsd Client for .NET Standard and .NET Framework 4.6",
+  "language": "en-US",
+  "authors": [
+    "Jury Soldatenkov"
+  ],
+  "buildOptions": {
+    "allowUnsafe": false,
+    "xmlDoc": true,
+    "optimize": true
+  },
+  "packOptions": {
+    "projectUrl": "https://github.com/Codestellation/statsd",
+    "tags": [
+      "Statsd Client"
+    ],
+    "licenseUrl": "https://github.com/Codestellation/statsd/raw/master/LICENSE",
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/Codestellation/statsd"
+    }
+  },
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50",
+      "dependencies": {
+        "NETStandard.Library": "1.6.0"
+      }
+    },
+    "net46": {}
+  }
+}
+
