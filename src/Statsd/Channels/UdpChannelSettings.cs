@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 
 namespace Codestellation.Statsd.Channels
 {
@@ -18,9 +19,9 @@ namespace Codestellation.Statsd.Channels
         public int Port { get; set; }
 
         /// <summary>
-        /// <see cref="UdpChannel"/> will throw error if DNS cannot be resolved.
+        /// <see cref="UdpChannel"/> will throw error if any <see cref="SocketException"/> happens.
         /// </summary>
-        public bool IgnoreDnsErrors { get; set; }
+        public bool IgnoreSocketExceptions { get; set; }
 
         /// <summary>
         /// Validates settings and throws an exception in case of invalid settings

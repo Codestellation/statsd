@@ -21,6 +21,7 @@ namespace Codestellation.Statsd.Channels
             {
                 throw new ArgumentNullException(nameof(settings));
             }
+            settings.Validate();
             _settings = settings;
 
             _updClient = new UdpClient();
@@ -75,7 +76,7 @@ namespace Codestellation.Statsd.Channels
             {
                 var message = $"UdpChannel was not able to send data to 'udp://{_settings.Host}:{_settings.Port}'. " +
                     "Possible reasons are invalid IP address or unresolvable DNS name.";
-                if (_settings.IgnoreDnsErrors)
+                if (!_settings.IgnoreSocketExceptions)
                 {
                     throw new InvalidOperationException(message, e);
                 }
