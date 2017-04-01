@@ -34,6 +34,11 @@ var client = new StatsdClient(channel);
 
 var count = new Count("bananas", 10);
 client.LogCount(count);
+
+// or even simplier using extension methods:
+
+client.LogCount("oranges", 11);
+
 ```
 
 One thing to notice: `IChannel` implementations are not thread safe and thus it's not recommended to reuse them among multiple instances of `IStatsdClient` implementations.
