@@ -21,16 +21,22 @@ PM> Install-Package Codestellation.Statsd
 
 # Usage
 
-The main interface of  `Codestellation.Statsd` is `IStatsdClient` interface which contains a bunch of methods to send metrics to a statsd server. It has two implementations^ 
+he main interface of  `Codestellation.Statsd` is `IStatsdClient` which contains a bunch of methods to send count, gauge, and timing metrics to a statsd server. It has two implementations: 
 * `StatsdClient` - simple synchronous client which is not thread safe. If you want to use it in a multithreaded environment consider instace per thread scenario.
 * `BackgroundStatsdClient` - asynchronous client which uses a background task to send metrics. It's absolutely thread safe. 
 
-
-The usage is as simple as:
-
+# Configuration
+## Configuration by code
+An instance of `IStatsdClient` could be configured manually
 ```
-var channel = new UdpChannel("statsd-server.org", 8888);
-var client = new StatsdClient(channel);
+var settings = new UdpChannelSettings
+{
+    Host = "my-host",
+    IgnoreSocketExceptions = true,
+    Port = 8085
+};
+var channel = new UdpChannel(settings);
+var client = new StatsdClient(channel, prefix:"ideal");
 
 var count = new Count("bananas", 10);
 client.LogCount(count);
@@ -38,6 +44,36 @@ client.LogCount(count);
 // or even simplier using extension methods:
 
 client.LogCount("oranges", 11);
+
+```
+## Configuration by URI
+
+```
+var uri = "udp://my-host:8085?prefix=the.service&background=false&ignore_exceptions=true";
+
+IStatsdClient actual = BuildStatsd.From(uri);
+```
+### URI Parameters
+* `prefix` - a prefix which will be applied before every metric name. Default value is `string.Empty`
+* `background` - which kind of client should be used - `BackgroundStatsdClient` or synchronous `StatsdClient`. Default value is true.  Note  `udp://my-host:8085?background=true` and `udp://my-host:8085?background` are treated equally. 
+* `ignore_exceptions` - ignore any `SocketException` when sending metrics. Default value is false. `udp://my-host:8085?ignore_exceptions=true` and `udp://my-host:8085?ignore_exceptions` are treated equally.
+
+
+## Sending metrics
+
+The usage is as simple as:
+```
+var client = BuildStatsd.From("udp://my-host:8085");
+// send metrics using IStatsdClient interface
+client.LogCount(new Count("bananas", 10));
+client.LogGauge(new Gauge("watermark", 42));
+client.LogTiming(new Timing("processing.time", 983));
+
+// or even simplier using extension methods:
+client.LogCount("oranges", 11);
+client.LogGauge("watermark", 42);
+client.LogTiming("processing.time", 983);
+
 
 ```
 

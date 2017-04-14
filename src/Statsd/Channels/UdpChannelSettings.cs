@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Sockets;
+using Codestellation.Statsd.Builder;
 
 namespace Codestellation.Statsd.Channels
 {
@@ -37,6 +38,31 @@ namespace Codestellation.Statsd.Channels
             {
                 throw new ArgumentOutOfRangeException(nameof(Port), $"Expected a number between 1 and {UInt16.MaxValue} but received {Port}");
             }
+        }
+
+        /// <summary>
+        /// Created and instance of <see cref="UdpChannelSettings"/> class using uri string parameters
+        /// </summary>
+        /// <param name="uri">Uri encoded parameters</param>
+        public static UdpChannelSettings Parse(Uri uri)
+        {
+            if (uri == null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (uri.Scheme != "udp")
+            {
+                throw new ArgumentException($"Uri scheme must be udp but was {uri.Scheme}");
+            }
+
+            var values = uri.GetQueryValues();
+
+            return new UdpChannelSettings
+            {
+                Host = uri.Host,
+                Port = uri.Port,
+                IgnoreSocketExceptions = values.ParseOrDefault(UriParseExtensions.IgnoreExceptions, onDefault: true)
+            };
         }
     }
 }
