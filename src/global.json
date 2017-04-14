@@ -1,5 +1,5 @@
 {
-  "projects":["Kernel","Tests", "Web","WinHost"],
+  "projects":["Statsd","Tests"],
   "sdk" :{
     "version":"1.0.0-preview2-003156"
   }
