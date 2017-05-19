@@ -9,7 +9,7 @@
     <TargetFrameworks>netstandard1.6;net46</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Codestellation.Statsd</AssemblyName>
-    <PackageId>Statsd</PackageId>
+    <PackageId>Codestellation.Statsd</PackageId>
     <PackageTags>Statsd Client</PackageTags>
     <PackageProjectUrl>https://github.com/Codestellation/statsd</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/Codestellation/statsd/raw/master/LICENSE</PackageLicenseUrl>
