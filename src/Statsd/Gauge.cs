@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace Codestellation.Statsd
 {
@@ -24,12 +24,9 @@ namespace Codestellation.Statsd
         /// <param name="value">Current level of something</param>
         public Gauge(string name, int value)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"Must be neither null nor empty string but was '{name}'", nameof(name));
-            }
-
-            Name = name;
+            Name = string.IsNullOrWhiteSpace(name)
+                ? throw new ArgumentException($"Must be neither null nor empty string but was '{name}'", nameof(name))
+                : name;
             Value = value;
         }
     }

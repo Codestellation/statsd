@@ -24,16 +24,12 @@ namespace Codestellation.Statsd
         /// <param name="value">Time interval in milliseconds</param>
         public Timing(string name, int value)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"Must be neither null nor empty string but was '{name}'", nameof(name));
-            }
-            if (value < 0)
-            {
-                throw new ArgumentException($"Must be non-negative value but was {value}", nameof(value));
-            }
-            Name = name;
-            Value = value;
+            Name = string.IsNullOrWhiteSpace(name)
+                ? throw new ArgumentException($"Must be neither null nor empty string but was '{name}'", nameof(name))
+                : name;
+            Value = value < 0
+                ? throw new ArgumentException($"Must be non-negative value but was {value}", nameof(value))
+                : value;
         }
     }
 }

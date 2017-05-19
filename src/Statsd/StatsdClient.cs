@@ -21,19 +21,15 @@ namespace Codestellation.Statsd
         /// <param name="prefix">Prefix which is will be for every metric.</param>
         public StatsdClient(IChannel channel, string prefix = null)
         {
-            if (channel == null)
-            {
-                throw new ArgumentNullException(nameof(channel));
-            }
             if (prefix != null && (string.IsNullOrWhiteSpace(prefix) || prefix.EndsWith(".")))
             {
-                const string message = "Must be either null or period delemited string and not end with '.'." +
-                    " For instance, 'my.favourite.prefix' is a right one.";
+                const string message = "Must be either null or period delimited string and not end with '.'." +
+                    " For instance, 'my.favorite.prefix' is a right one.";
                 throw new ArgumentException(message, nameof(prefix));
             }
 
             _writer = new StatsdWriter(prefix);
-            _channel = channel;
+            _channel = channel ?? throw new ArgumentNullException(nameof(channel));
         }
 
         /// <inheritdoc />

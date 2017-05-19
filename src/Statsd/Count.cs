@@ -24,12 +24,9 @@ namespace Codestellation.Statsd
         /// <param name="value">Number of times something happened</param>
         public Count(string name, int value)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"Must be neither null nor empty string but was '{name}'", nameof(name));
-            }
-
-            Name = name;
+            Name = string.IsNullOrWhiteSpace(name) 
+                ? throw new ArgumentException($"Must be neither null nor empty string but was '{name}'", nameof(name))
+                : name;
             Value = value;
         }
     }

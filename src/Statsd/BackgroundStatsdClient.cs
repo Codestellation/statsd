@@ -26,8 +26,8 @@ namespace Codestellation.Statsd
             }
             if (prefix != null && (string.IsNullOrWhiteSpace(prefix) || prefix.EndsWith(".")))
             {
-                const string message = "Must be either null or period delemited string and not end with '.'." +
-                    " For instance, 'my.favourite.prefix' is a right one";
+                const string message = "Must be either null or period delimited string and not end with '.'." +
+                    " For instance, 'my.favorite.prefix' is a right one";
                 throw new ArgumentException(message, nameof(prefix));
             }
             _queue = new MetricsQueue(initialQueueSize);
