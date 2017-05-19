@@ -1,10 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>Blazingly Fast Statsd Client for .NET Standard and .NET Framework 4.6</Description>
     <AssemblyTitle>Codestellation Statsd</AssemblyTitle>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <VersionPrefix>1.1.0.0</VersionPrefix>
+    <VersionPrefix>0.0.0.0</VersionPrefix>
     <Authors>Jury Soldatenkov</Authors>
     <TargetFrameworks>netstandard1.6;net46</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

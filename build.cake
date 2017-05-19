@@ -92,6 +92,7 @@ Task("Version")
     }
 
     Information("AssemblyVersion is '{0}'", infoVersion);
+    Information("PackageVersion is '{0}'", packageVersion);
 });
 
 Task("Clean")
@@ -155,12 +156,14 @@ Task("Pack")
     .IsDependentOn("test")
     .Does(()=>
 {
-    var artifacts = Directory("./artifacts");
+    var artifacts = new DirectoryInfo("./artifacts");
+    var args = string.Format("pack Statsd -c Release --output {0}", artifacts.FullName);
     var settings = new ProcessSettings 
     { 
-        Arguments = "pack Statsd -c Release --output " + artifacts.Path.FullPath,
+        Arguments = args,
         WorkingDirectory = Directory("./src")
     };
+    Information("Pack arguments is '{0}'", args);
     int result;
     if((result = StartProcess("dotnet", settings)) != 0) 
     {
