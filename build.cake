@@ -75,20 +75,20 @@ Task("Version")
         InformationalVersion = infoVersion,
         Copyright = copyright
     };
-    var projects = new List<string>();
-    projects.AddRange(solutionDirInfo.EnumerateFiles("project.json", SearchOption.AllDirectories).Select(x => x.DirectoryName));
-    projects.AddRange(solutionDirInfo.EnumerateFiles("*.csproj", SearchOption.AllDirectories).Select(x => x.DirectoryName));
+    var projects = new List<FileInfo>();
+    projects.AddRange(solutionDirInfo.EnumerateFiles("*.csproj", SearchOption.AllDirectories));
 
     Information("Found {0} projects", projects.Count);
 
-    foreach(var project in projects)
+    foreach(FileInfo project in projects)
     {
-        var file = Directory(project) + File("SolutionVersion.cs");
+        var file = Directory(project.DirectoryName) + File("SolutionVersion.cs");
         CreateAssemblyInfo(file, asmInfo);
-        var projectFile = Directory(project) + File("project.json");
-        var content = System.IO.File.ReadAllText(projectFile);
-        content = content.Replace("\"version\": \"1.0.0-*\"", string.Format("\"version\": \"{0}\"", packageVersion));
-        System.IO.File.WriteAllText(projectFile, content);
+        
+        var content = System.IO.File.ReadAllText(project.FullName);
+        var versionPrefix = string.Format("<VersionPrefix>{0}</VersionPrefix>", packageVersion);
+        content = content.Replace("<VersionPrefix>0.0.0.0</VersionPrefix>", versionPrefix);
+        System.IO.File.WriteAllText(project.FullName, content);
     }
 
     Information("AssemblyVersion is '{0}'", infoVersion);
@@ -122,7 +122,7 @@ Task("Build")
 {
     var settings = new ProcessSettings 
     { 
-        Arguments = "build **/project.json",
+        Arguments = "build Statsd.sln",
         WorkingDirectory = Directory("./src")
     };
     int result;
@@ -138,8 +138,8 @@ Task("Test")
 {
     var settings = new ProcessSettings 
     { 
-        Arguments = "test tests",
-        WorkingDirectory = Directory("./src")        
+        Arguments = "test",
+        WorkingDirectory = Directory("./src/Tests")        
 
     };
     int result;
