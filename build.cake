@@ -155,9 +155,10 @@ Task("Pack")
     .IsDependentOn("test")
     .Does(()=>
 {
+    var artifacts = Directory("./artifacts");
     var settings = new ProcessSettings 
     { 
-        Arguments = "pack Statsd -c Release --output ../artifacts",
+        Arguments = "pack Statsd -c Release --output " + artifacts.Path.FullPath,
         WorkingDirectory = Directory("./src")
     };
     int result;
