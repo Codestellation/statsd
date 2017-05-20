@@ -40,5 +40,17 @@
             self.LogTiming(new Timing(name, value));
             return self;
         }
+
+        /// <summary>
+        /// Sends gauge metric into a <see cref="IStatsdClient"/>
+        /// </summary>
+        /// <param name="self">An instance of the <see cref="IStatsdClient"/></param>
+        /// <param name="name">Name of a metric</param>
+        /// <param name="stopwatch">An instance of <see cref="LeanStopwatch"/> which will be used to determine time interval</param>
+        public static IStatsdClient LogTiming(this IStatsdClient self, string name, LeanStopwatch stopwatch)
+        {
+            self.LogTiming(stopwatch.Elapsed(name));
+            return self;
+        }
     }
 }

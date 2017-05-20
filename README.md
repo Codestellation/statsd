@@ -77,6 +77,22 @@ client.LogTiming("processing.time", 983);
 
 ```
 
+## Timing measure
+
+.NET API contains `System.Diagnostics.Stopwatch` class which could be used to provide precise measurements of time intervals. However it's a class 
+and thus it's usage produce a bit of pressure of on garbage collectior. 
+`Codestellation.Statsd` provide a better way to avoid this using a `LeanStopwatch` structure:
+```
+var client = BuildStatsd.From("udp://my-host:8085");
+var leanStopwatch = LeanStopwatch.StartNew();
+//Do some stuff. 
+var timing = leanStopWatch.Elapsed("eating.cookies");
+//Log the measurement using IStatsdClient. 
+client.LogTiming(timing);
+//Or use it's extension method which accepts LeanStopwatch instance
+client.LogTiming("eating.cookies", leanStopwatch);
+```
+
 One thing to notice: `IChannel` implementations are not thread safe and thus it's not recommended to reuse them among multiple instances of `IStatsdClient` implementations.
 
 # How to contribute
