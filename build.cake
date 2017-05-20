@@ -75,24 +75,10 @@ Task("Version")
         InformationalVersion = infoVersion,
         Copyright = copyright
     };
-    var projects = new List<FileInfo>();
-    projects.AddRange(solutionDirInfo.EnumerateFiles("*.csproj", SearchOption.AllDirectories));
 
-    Information("Found {0} projects", projects.Count);
-
-    foreach(FileInfo project in projects)
-    {
-        var file = Directory(project.DirectoryName) + File("SolutionVersion.cs");
-        CreateAssemblyInfo(file, asmInfo);
-        
-        var content = System.IO.File.ReadAllText(project.FullName);
-        var versionPrefix = string.Format("<VersionPrefix>{0}</VersionPrefix>", packageVersion);
-        content = content.Replace("<VersionPrefix>0.0.0.0</VersionPrefix>", versionPrefix);
-        System.IO.File.WriteAllText(project.FullName, content);
-    }
-
-    Information("AssemblyVersion is '{0}'", infoVersion);
-    Information("PackageVersion is '{0}'", packageVersion);
+    Information("Assembly Version is '{0}'", assemblyVersion);
+    Information("Assembly Information Version is '{0}'", infoVersion);
+    Information("Package Version is '{0}'", packageVersion);
 });
 
 Task("Clean")
@@ -157,7 +143,7 @@ Task("Pack")
     .Does(()=>
 {
     var artifacts = new DirectoryInfo("./artifacts");
-    var args = string.Format("pack Statsd -c Release --output {0}", artifacts.FullName);
+    var args = string.Format("pack Statsd -c Release --output {0} /p:PackageVersion={1}", artifacts.FullName, packageVersion);
     var settings = new ProcessSettings 
     { 
         Arguments = args,
