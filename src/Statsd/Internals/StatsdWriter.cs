@@ -11,10 +11,10 @@ namespace Codestellation.Statsd.Internals
         private const int MaxMtu = 3 * 128;
         private static readonly Encoding Encoding = new UTF8Encoding(false);
 
-        private readonly byte[] _buffer;
+        private byte[] _buffer;
         private int _position;
-        private readonly byte[] _intBuffer;
         private readonly Dictionary<string, byte[]> _stringCache;
+        private IntegerBuffer _intBuffer;
 
         public byte[] Buffer => _buffer;
 
@@ -26,7 +26,7 @@ namespace Codestellation.Statsd.Internals
         public StatsdWriter(string prefix)
         {
             _prefix = prefix;
-            _intBuffer = new byte[10];
+            _intBuffer = new IntegerBuffer();
             _buffer = new byte[1024];
             _position = 0;
             _stringCache = new Dictionary<string, byte[]>(StringComparer.Ordinal);
@@ -58,16 +58,7 @@ namespace Codestellation.Statsd.Internals
             }
 
             //format int to it's string representation
-            int digitCount = 0;
-            for (int quotient = value; quotient != 0; quotient /= 10)
-            {
-                _intBuffer[digitCount++] = (byte)(offset + quotient % 10);
-            }
-
-            for (int i = digitCount - 1; i >= 0; i--)
-            {
-                _buffer[_position++] = _intBuffer[i];
-            }
+            _intBuffer.WriteNumber(ref _buffer, ref _position, ref value);
         }
 
         public void WritePostfix(Type type)
