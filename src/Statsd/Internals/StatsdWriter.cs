@@ -32,6 +32,13 @@ namespace Codestellation.Statsd.Internals
             _stringCache = new Dictionary<string, byte[]>(StringComparer.Ordinal);
         }
 
+        public void Write(ref Metric metric)
+        {
+            WriteName(metric.Name);
+            WriteValue(metric.Value);
+            metric.WritePostfix(ref _buffer, ref _position);
+        }
+
         public void WriteName(string name)
         {
             byte[] utf8Array;
@@ -61,21 +68,6 @@ namespace Codestellation.Statsd.Internals
             _intBuffer.WriteNumber(ref _buffer, ref _position, ref value);
         }
 
-        public void WritePostfix(Type type)
-        {
-            switch (type)
-            {
-                case Type.Count:
-                    WritePostfix('c');
-                    return;
-                case Type.Gauge:
-                    WritePostfix('g');
-                    return;
-                case Type.Timing:
-                    WritePostfix('m', 's');
-                    return;
-            }
-        }
 
 #if !NET40
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
