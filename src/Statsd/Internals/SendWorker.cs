@@ -16,17 +16,8 @@ namespace Codestellation.Statsd.Internals
 
         public SendWorker(MetricsQueue queue, IChannel channel, string prefix)
         {
-            if (queue == null)
-            {
-                throw new ArgumentNullException(nameof(queue));
-            }
-
-            if (channel == null)
-            {
-                throw new ArgumentNullException(nameof(channel));
-            }
-            _queue = queue;
-            _channel = channel;
+            _queue = queue ?? throw new ArgumentNullException(nameof(queue));
+            _channel = channel ?? throw new ArgumentNullException(nameof(channel));
             _writer = new StatsdWriter(prefix);
 
             _source = new CancellationTokenSource();
@@ -58,15 +49,13 @@ namespace Codestellation.Statsd.Internals
         {
             for (int i = 0; i < batchSize; i++)
             {
-                var metric = _batch[i];
+                
                 if (_writer.ContainsData)
                 {
                     _writer.WriteSeparator();
                 }
 
-                _writer.WriteName(metric.Name);
-                _writer.WriteValue(metric.Value);
-                _writer.WritePostfix(metric.Type);
+                _writer.Write(ref _batch[i]);
 
                 if (_writer.MtuExceeded)
                 {
