@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Blazingly Fast Statsd Client for .NET Standard and .NET Framework 4.6</Description>
+    <Description>Blazingly Fast Statsd Client for .NET Standard and .NET Framework 4.0+</Description>
     <AssemblyTitle>Codestellation Statsd</AssemblyTitle>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Authors>Jury Soldatenkov</Authors>
@@ -15,6 +15,10 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>git://github.com/Codestellation/statsd</RepositoryUrl>
     <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.6' ">$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+    <PackageReleaseNotes>
+        #2 Created Lean Stopwatch to measure timings
+        #4 Support for .NET 4.0
+    </PackageReleaseNotes>
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.6' ">1.6.0</NetStandardImplicitPackageVersion>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
