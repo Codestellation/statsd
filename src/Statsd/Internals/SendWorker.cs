@@ -30,7 +30,14 @@ namespace Codestellation.Statsd.Internals
             _writer = new StatsdWriter(prefix);
 
             _source = new CancellationTokenSource();
+#if NET40
+            _task = new Task((Action)ProcessQueue, _source.Token);
+            _task.Start();
+#else
             _task = Task.Run((Action)ProcessQueue, _source.Token);
+#endif
+
+
             _batch = new Metric[50];
         }
 

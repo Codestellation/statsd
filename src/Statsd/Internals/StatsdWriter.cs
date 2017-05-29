@@ -44,8 +44,9 @@ namespace Codestellation.Statsd.Internals
             Array.Copy(utf8Array, 0, _buffer, _position, utf8Array.Length);
             _position += utf8Array.Length;
         }
-
+#if !NET40
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
         public void WriteValue(int value)
         {
             const byte offset = (byte)'0';
@@ -85,14 +86,18 @@ namespace Codestellation.Statsd.Internals
             }
         }
 
+#if !NET40
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
         public void WritePostfix(char c)
         {
             _buffer[_position++] = (byte)'|';
             _buffer[_position++] = (byte)c;
         }
 
+#if !NET40
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
         public void WritePostfix(char c1, char c2)
         {
             _buffer[_position++] = (byte)'|';
@@ -100,7 +105,9 @@ namespace Codestellation.Statsd.Internals
             _buffer[_position++] = (byte)c2;
         }
 
+#if !NET40
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
         public void WritePostfix(char c1, char c2, char c3)
         {
             _buffer[_position++] = (byte)'|';
@@ -109,13 +116,17 @@ namespace Codestellation.Statsd.Internals
             _buffer[_position++] = (byte)c3;
         }
 
+#if !NET40
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
         public void WriteSeparator()
         {
             _buffer[_position++] = (byte)'\n';
         }
 
+#if !NET40
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
         public void Reset()
         {
             _position = 0;
