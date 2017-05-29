@@ -7,15 +7,18 @@ namespace Codestellation.Statsd
     /// </summary>
     public struct Count
     {
+        internal string _name;
+        internal int _value;
+
         /// <summary>
         /// Name of the metric
         /// </summary>
-        public string Name { get; }
+        public string Name => _name;
 
         /// <summary>
         /// Number of times something happened
         /// </summary>
-        public int Value { get; }
+        public int Value => _value;
 
         /// <summary>
         /// Initializes a new instance of <see cref="Count"/> structure
@@ -24,10 +27,10 @@ namespace Codestellation.Statsd
         /// <param name="value">Number of times something happened</param>
         public Count(string name, int value)
         {
-            Name = string.IsNullOrWhiteSpace(name) 
+            _name = string.IsNullOrWhiteSpace(name)
                 ? throw new ArgumentException($"Must be neither null nor empty string but was '{name}'", nameof(name))
                 : name;
-            Value = value;
+            _value = value;
         }
     }
 }

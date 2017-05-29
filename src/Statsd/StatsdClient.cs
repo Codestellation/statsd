@@ -202,8 +202,8 @@ namespace Codestellation.Statsd
 #endif
         private void Write(Timing timing)
         {
-            _writer.WriteName(timing.Name);
-            _writer.WriteValue(timing.Value);
+            _writer.WriteName(ref timing._name);
+            _writer.WriteValue(ref timing._value);
             _writer.WritePostfix('m', 's');
         }
 
@@ -212,8 +212,8 @@ namespace Codestellation.Statsd
 #endif
         private void Write(Gauge gauge)
         {
-            _writer.WriteName(gauge.Name);
-            _writer.WriteValue(gauge.Value);
+            _writer.WriteName(ref gauge._name);
+            _writer.WriteValue(ref gauge._value);
             _writer.WritePostfix('g');
         }
 
@@ -231,8 +231,8 @@ namespace Codestellation.Statsd
 #endif
         private void Write(Count count)
         {
-            _writer.WriteName(count.Name);
-            _writer.WriteValue(count.Value);
+            _writer.WriteName(ref count._name);
+            _writer.WriteValue(ref count._value);
             _writer.WritePostfix('c');
         }
     }

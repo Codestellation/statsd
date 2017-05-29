@@ -34,12 +34,12 @@ namespace Codestellation.Statsd.Internals
 
         public void Write(ref Metric metric)
         {
-            WriteName(metric.Name);
-            WriteValue(metric.Value);
+            WriteName(ref metric.Name);
+            WriteValue(ref metric.Value);
             metric.WritePostfix(ref _buffer, ref _position);
         }
 
-        public void WriteName(string name)
+        public void WriteName(ref string name)
         {
             byte[] utf8Array;
             if (!_stringCache.TryGetValue(name, out utf8Array))
@@ -54,7 +54,7 @@ namespace Codestellation.Statsd.Internals
 #if !NET40
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        public void WriteValue(int value)
+        public void WriteValue(ref int value)
         {
             const byte offset = (byte)'0';
 
@@ -67,7 +67,6 @@ namespace Codestellation.Statsd.Internals
             //format int to it's string representation
             _intBuffer.WriteNumber(ref _buffer, ref _position, ref value);
         }
-
 
 #if !NET40
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

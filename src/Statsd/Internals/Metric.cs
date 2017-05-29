@@ -2,8 +2,8 @@
 {
     internal struct Metric
     {
-        public readonly string Name;
-        public readonly int Value;
+        public string Name;
+        public int Value;
         private Postfix _postfix;
 
         public Metric(Count count)
