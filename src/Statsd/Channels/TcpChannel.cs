@@ -50,7 +50,7 @@ namespace Codestellation.Statsd.Channels
         /// <inheritdoc />
         public void Dispose()
         {
-#if NET40
+#if NET40 || NET45
             _tcpClient?.Close();
 #else
             _tcpClient?.Dispose();

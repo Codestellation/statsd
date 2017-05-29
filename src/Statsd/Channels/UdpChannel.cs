@@ -63,7 +63,7 @@ namespace Codestellation.Statsd.Channels
         /// <inheritdoc />
         public void Dispose()
         {
-#if NET40
+#if NET40 || NET45
             _updClient?.Close();
 #else
             _updClient?.Dispose();

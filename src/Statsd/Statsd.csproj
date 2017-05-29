@@ -5,7 +5,7 @@
     <AssemblyTitle>Codestellation Statsd</AssemblyTitle>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Authors>Jury Soldatenkov</Authors>
-    <TargetFrameworks>netstandard1.6;net40;net46</TargetFrameworks>
+    <TargetFrameworks>netstandard1.6;net40;net45;net46</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Codestellation.Statsd</AssemblyName>
     <PackageId>Codestellation.Statsd</PackageId>
@@ -24,7 +24,7 @@
     <RootNamespace>Codestellation.Statsd</RootNamespace>
   </PropertyGroup>
   
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' Or '$(TargetFramework)' == 'net40' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' Or '$(TargetFramework)' == 'net45' Or '$(TargetFramework)' == 'net46' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
