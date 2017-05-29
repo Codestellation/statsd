@@ -9,7 +9,7 @@ namespace Codestellation.Statsd.Channels
     public class UdpChannel : IChannel, IDisposable
     {
         private readonly UdpChannelSettings _settings;
-        private readonly UdpClient _updClient;
+        private readonly UdpClient _udpClient;
 
         /// <summary>
         /// Creates a new instance of <see cref="UdpChannel"/> class
@@ -24,7 +24,7 @@ namespace Codestellation.Statsd.Channels
             settings.Validate();
             _settings = settings;
 
-            _updClient = new UdpClient();
+            _udpClient = new UdpClient();
             TryConnect();
         }
 
@@ -50,13 +50,13 @@ namespace Codestellation.Statsd.Channels
             {
                 return;
             }
-            if (!_updClient.Client.Connected)
+            if (!_udpClient.Client.Connected)
             {
                 TryConnect();
             }
-            if (_updClient.Client.Connected)
+            if (_udpClient.Client.Connected)
             {
-                _updClient.Client.Send(buffer, count, SocketFlags.None);
+                _udpClient.Client.Send(buffer, count, SocketFlags.None);
             }
         }
 
@@ -64,9 +64,9 @@ namespace Codestellation.Statsd.Channels
         public void Dispose()
         {
 #if NET40 || NET45
-            _updClient?.Close();
+            _udpClient?.Close();
 #else
-            _updClient?.Dispose();
+            _udpClient?.Dispose();
 #endif
         }
 
@@ -74,7 +74,7 @@ namespace Codestellation.Statsd.Channels
         {
             try
             {
-                _updClient.Client.Connect(_settings.Host, _settings.Port);
+                _udpClient.Client.Connect(_settings.Host, _settings.Port);
             }
             catch (SocketException e)
             {
