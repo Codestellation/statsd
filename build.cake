@@ -9,6 +9,17 @@ var solutionDirInfo = new DirectoryInfo(solutionPath.Path.FullPath);
 
 var buildPath = Directory(Argument("output", "./nuget"));
 
+var defaultTask = 
+    AppVeyor.IsRunningOnAppVeyor && AppVeyor.Environment.Repository.Branch == "master"
+        ? "Push"
+        : "Test";
+
+var nuget = "https://www.nuget.org/api/v2/package";
+var nugetKey = EnvironmentVariable("nuget_key");
+
+var myget =  "https://www.myget.org/F/codestellation/api/v2/package";
+var mygetKey = EnvironmentVariable("myget_key");
+
 Task("Version")
   .Does(() => 
 {
@@ -166,8 +177,8 @@ Task("Push")
 
   // Push the package.
   NuGetPush(package, new NuGetPushSettings {
-      Source = "https://www.myget.org/F/codestellation/api/v2/package",
-      ApiKey = EnvironmentVariable("myget_key")
+      Source = nuget,
+      ApiKey = nugetKey
   });
 });
 
@@ -180,10 +191,10 @@ Task("Make")
 });
 
 Task("Default")
-  .IsDependentOn("Test")
+  .IsDependentOn(defaultTask)
   .Does(() =>
 {
-  
+    Information("Running build script with target '{0}'", defaultTask);
 });
 
 RunTarget(target);
