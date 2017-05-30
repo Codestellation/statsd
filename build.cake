@@ -59,7 +59,7 @@ Task("Version")
     var assemblyVersion = string.Format("{0}.{1}", major, minor);
     var fullVersion = string.Format("{0}.{1}.{2}.{3}", major, minor, revision, build);
 
-    packageVersion = fullVersion;
+    packageVersion = string.Format("{0}.{1}.{2}", major, minor, revision);;
     if(!string.IsNullOrWhiteSpace(dirty))
     {
         packageVersion += ("-" + dirty);
