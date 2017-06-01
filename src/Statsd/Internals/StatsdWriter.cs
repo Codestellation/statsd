@@ -57,17 +57,51 @@ namespace Codestellation.Statsd.Internals
                 return;
             }
 
-            //format int to it's string representation
-            int digitCount = 0;
-            for (int quotient = value; quotient != 0; quotient /= 10)
+            var length = 0;
+            if (value < 100)
             {
-                _intBuffer[digitCount++] = (byte)(offset + quotient % 10);
+                length = 2;
+            }
+            else if (value < 1_000)
+            {
+                length = 3;
+            }
+            else if (value < 10_000)
+            {
+                length = 4;
+            }
+            else if (value < 100_000)
+            {
+                length = 5;
+            }
+            else if (value < 1_000_000)
+            {
+                length = 6;
+            }
+            else if (value < 10_000_000)
+            {
+                length = 7;
+            }
+            else if (value < 100_000_000)
+            {
+                length = 8;
+            }
+            else if (value < 1_000_000_000)
+            {
+                length = 9;
+            }
+            else
+            {
+                length = 10;
             }
 
-            for (int i = digitCount - 1; i >= 0; i--)
+            for (int i = _position + length - 1; i >= _position; i--)
             {
-                _buffer[_position++] = _intBuffer[i];
+                _buffer[i] = (byte)('0' + value % 10);
+                value /= 10;
             }
+
+            _position += length;
         }
 
         public void WritePostfix(Type type)
