@@ -46,11 +46,23 @@ namespace Codestellation.Statsd.Internals
 
         public void Write(ref byte[] buffer, ref int position)
         {
+#if NETSTANDARD1_6 || NET46
             fixed (byte* source = _postfix)
             fixed (byte* dest = &buffer[position])
             {
                 Buffer.MemoryCopy(source, dest, Math.Min(buffer.Length - position, _length), _length);
             }
+#else
+            fixed (byte* source = _postfix)
+            fixed (byte* dest = &buffer[position])
+            {
+                for(int i = 0; i < _length; i++)    
+                {
+                    dest[i] = source[i];
+                }
+
+            }
+#endif
             position += _length;
         }
     }

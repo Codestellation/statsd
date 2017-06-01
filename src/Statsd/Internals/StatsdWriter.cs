@@ -35,7 +35,7 @@ namespace Codestellation.Statsd.Internals
         public void Write(ref Metric metric)
         {
             WriteName(metric.Name);
-            WriteValue(metric.Value);
+            WriteValue2(metric.Value);
             metric.WritePostfix(ref _buffer, ref _position);
         }
 
@@ -65,9 +65,70 @@ namespace Codestellation.Statsd.Internals
             }
 
             //format int to it's string representation
-            _intBuffer.WriteNumber(ref _buffer, ref _position, ref value);
+            _position += _intBuffer.WriteNumber(_buffer, _position, value);
         }
 
+        public void WriteValue2(int value)
+        {
+            const byte offset = (byte)'0';
+
+            if (0 <= value && value < 10)
+            {
+                _buffer[_position++] = (byte)(offset + (byte)value);
+                return;
+            }
+
+            var length = 0;
+            if (value < 100)
+            {
+                length = 2;
+            }
+            else if (value < 1_000)
+            {
+                length = 3;
+            }
+            else if (value < 10_000)
+            {
+                length = 4;
+            }
+            else if (value < 100_000)
+            {
+                length = 5;
+            }
+            else if (value < 1_000_000)
+            {
+                length = 6;
+            }
+            else if (value < 10_000_000)
+            {
+                length = 7;
+            }
+            else if (value < 100_000_000)
+            {
+                length = 8;
+            }
+            else if (value < 1_000_000_000)
+            {
+                length = 9;
+            }
+            else
+            {
+                length = 10;
+            }
+
+            for (int i = _position + length - 1; i >= _position; i--)
+            {
+                _buffer[i] = (byte)('0' + value % 10);
+                value /= 10;
+            }
+
+            //for (int quotient = value; quotient != 0; quotient /= 10)
+            //{
+            //    nbp[--numberBufferOffset] = (byte)( + quotient % 10);
+            //}
+
+            _position += length;
+        }
 
 #if !NET40
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

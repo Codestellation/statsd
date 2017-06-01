@@ -11,7 +11,7 @@ namespace Codestellation.Statsd.Internals
         private fixed byte _numberBuffer[BufferSize];
 
         //The method is not supposed to change parameters, but position (ref is simple faster than normal parameter)
-        public void WriteNumber(ref byte[] buffer, ref int position, ref int value)
+        public int WriteNumber(byte[] buffer, int position, int value)
         {
             fixed (byte* nbp = _numberBuffer)
             {
@@ -34,7 +34,7 @@ namespace Codestellation.Statsd.Internals
                 }
 
 #endif
-                position += length;
+                return length;
             }
         }
     }
