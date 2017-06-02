@@ -3,7 +3,7 @@ using Codestellation.Statsd.Channels;
 using FluentAssertions;
 using Xunit;
 
-namespace Tests.Channels
+namespace Codestellation.Statsd.Tests.Channels
 {
     public class UdpChannelSettingsTests
     {

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp1.0;net452;net46</TargetFrameworks>
-    <AssemblyName>Tests</AssemblyName>
+    <AssemblyName>Codestellation.Statsd.Tests</AssemblyName>
     <PackageId>Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>

@@ -1,9 +1,8 @@
 ﻿using System.Globalization;
-using Codestellation.Statsd;
 using FluentAssertions;
 using Xunit;
 
-namespace Tests
+namespace Codestellation.Statsd.Tests
 {
     public class NumberSerialzationTest
     {

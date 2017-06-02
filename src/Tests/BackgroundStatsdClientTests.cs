@@ -1,9 +1,8 @@
 ﻿using System.Linq;
-using Codestellation.Statsd;
 using FluentAssertions;
 using Xunit;
 
-namespace Tests
+namespace Codestellation.Statsd.Tests
 {
     public class BackgroundStatsdClientTests
     {

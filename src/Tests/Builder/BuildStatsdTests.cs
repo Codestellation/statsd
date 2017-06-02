@@ -1,9 +1,8 @@
-﻿using Codestellation.Statsd;
-using Codestellation.Statsd.Builder;
+﻿using Codestellation.Statsd.Builder;
 using FluentAssertions;
 using Xunit;
 
-namespace Tests.Builder
+namespace Codestellation.Statsd.Tests.Builder
 {
     public class BuildStatsdTests
     {

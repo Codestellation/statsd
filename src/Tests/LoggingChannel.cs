@@ -3,9 +3,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using Codestellation.Statsd;
 
-namespace Tests
+namespace Codestellation.Statsd.Tests
 {
     public class LoggingChannel : IChannel
     {
