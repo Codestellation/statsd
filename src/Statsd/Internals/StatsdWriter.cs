@@ -49,15 +49,15 @@ namespace Codestellation.Statsd.Internals
 #endif
         public void WriteValue(int value)
         {
-            const byte offset = (byte)'0';
+            const int offset = '0';
 
-            if (0 <= value && value < 10)
+            if (value < 10)
             {
-                _buffer[_position++] = (byte)(offset + (byte)value);
+                _buffer[_position++] = (byte)(offset + value);
                 return;
             }
 
-            var length = 0;
+            int length;
             if (value < 100)
             {
                 length = 2;
@@ -95,9 +95,9 @@ namespace Codestellation.Statsd.Internals
                 length = 10;
             }
 
-            for (int i = _position + length - 1; i >= _position; i--)
+            for (int i = _position + length-1; i >= _position; --i)
             {
-                _buffer[i] = (byte)('0' + value % 10);
+                _buffer[i] = (byte)(offset + value % 10);
                 value /= 10;
             }
 
