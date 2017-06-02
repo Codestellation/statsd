@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Codestellation.Statsd.Internals
@@ -13,7 +12,6 @@ namespace Codestellation.Statsd.Internals
 
         private readonly byte[] _buffer;
         private int _position;
-        private readonly byte[] _intBuffer;
         private readonly Dictionary<string, byte[]> _stringCache;
 
         public byte[] Buffer => _buffer;
@@ -26,7 +24,6 @@ namespace Codestellation.Statsd.Internals
         public StatsdWriter(string prefix)
         {
             _prefix = prefix;
-            _intBuffer = new byte[10];
             _buffer = new byte[1024];
             _position = 0;
             _stringCache = new Dictionary<string, byte[]>(StringComparer.Ordinal);
@@ -41,12 +38,11 @@ namespace Codestellation.Statsd.Internals
                 utf8Array = Encoding.GetBytes(fullname);
                 _stringCache[name] = utf8Array;
             }
+            //TODO: Check out a better way to copy name from cache
             Array.Copy(utf8Array, 0, _buffer, _position, utf8Array.Length);
             _position += utf8Array.Length;
         }
-#if !NET40
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
+
         public void WriteValue(int value)
         {
             const int offset = '0';
@@ -95,7 +91,7 @@ namespace Codestellation.Statsd.Internals
                 length = 10;
             }
 
-            for (int i = _position + length-1; i >= _position; --i)
+            for (int i = _position + length - 1; i >= _position; --i)
             {
                 _buffer[i] = (byte)(offset + value % 10);
                 value /= 10;
@@ -120,18 +116,12 @@ namespace Codestellation.Statsd.Internals
             }
         }
 
-#if !NET40
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public void WritePostfix(char c)
         {
             _buffer[_position++] = (byte)'|';
             _buffer[_position++] = (byte)c;
         }
 
-#if !NET40
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public void WritePostfix(char c1, char c2)
         {
             _buffer[_position++] = (byte)'|';
@@ -139,28 +129,11 @@ namespace Codestellation.Statsd.Internals
             _buffer[_position++] = (byte)c2;
         }
 
-#if !NET40
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
-        public void WritePostfix(char c1, char c2, char c3)
-        {
-            _buffer[_position++] = (byte)'|';
-            _buffer[_position++] = (byte)c1;
-            _buffer[_position++] = (byte)c2;
-            _buffer[_position++] = (byte)c3;
-        }
-
-#if !NET40
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public void WriteSeparator()
         {
             _buffer[_position++] = (byte)'\n';
         }
 
-#if !NET40
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public void Reset()
         {
             _position = 0;
