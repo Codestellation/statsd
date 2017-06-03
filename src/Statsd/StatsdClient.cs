@@ -197,9 +197,6 @@ namespace Codestellation.Statsd
             }
         }
 
-#if !NET40
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         private void Write(Timing timing)
         {
             _writer.WriteName(timing.Name);
@@ -207,9 +204,7 @@ namespace Codestellation.Statsd
             _writer.WritePostfix(Postfix.Timing);
         }
 
-#if !NET40
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
+
         private void Write(Gauge gauge)
         {
             _writer.WriteName(gauge.Name);
@@ -217,18 +212,12 @@ namespace Codestellation.Statsd
             _writer.WritePostfix(Postfix.Gauge);
         }
 
-#if !NET40
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         private void Send()
         {
             _channel.Send(_writer.Buffer, _writer.Position);
             _writer.Reset();
         }
 
-#if !NET40
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         private void Write(Count count)
         {
             _writer.WriteName(count.Name);
