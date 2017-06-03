@@ -204,7 +204,7 @@ namespace Codestellation.Statsd
         {
             _writer.WriteName(timing.Name);
             _writer.WriteValue(timing.Value);
-            _writer.WritePostfix('m', 's');
+            _writer.WritePostfix(Postfix.Timing);
         }
 
 #if !NET40
@@ -214,7 +214,7 @@ namespace Codestellation.Statsd
         {
             _writer.WriteName(gauge.Name);
             _writer.WriteValue(gauge.Value);
-            _writer.WritePostfix('g');
+            _writer.WritePostfix(Postfix.Gauge);
         }
 
 #if !NET40
@@ -233,7 +233,7 @@ namespace Codestellation.Statsd
         {
             _writer.WriteName(count.Name);
             _writer.WriteValue(count.Value);
-            _writer.WritePostfix('c');
+            _writer.WritePostfix(Postfix.Count);
         }
     }
 }

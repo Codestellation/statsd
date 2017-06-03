@@ -1,29 +1,29 @@
-namespace Codestellation.Statsd.Internals
+﻿namespace Codestellation.Statsd.Internals
 {
     internal struct Metric
     {
-        public readonly Type Type;
         public readonly string Name;
         public readonly int Value;
+        public readonly int Postfix;
 
         public Metric(Count count)
-            : this(Type.Count, count.Name, count.Value)
+            : this(count.Name, count.Value, Statsd.Postfix.Count)
         {
         }
 
         public Metric(Gauge gauge)
-            : this(Type.Gauge, gauge.Name, gauge.Value)
+            : this(gauge.Name, gauge.Value, Statsd.Postfix.Gauge)
         {
         }
 
         public Metric(Timing timing)
-            : this(Type.Timing, timing.Name, timing.Value)
+            : this(timing.Name, timing.Value, Statsd.Postfix.Timing)
         {
         }
 
-        private Metric(Type type, string name, int value)
+        private Metric(string name, int value, int postfix)
         {
-            Type = type;
+            Postfix = postfix;
             Name = name;
             Value = value;
         }

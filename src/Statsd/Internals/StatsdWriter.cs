@@ -100,35 +100,6 @@ namespace Codestellation.Statsd.Internals
             _position += length;
         }
 
-        public void WritePostfix(Type type)
-        {
-            switch (type)
-            {
-                case Type.Count:
-                    WritePostfix('c');
-                    return;
-                case Type.Gauge:
-                    WritePostfix('g');
-                    return;
-                case Type.Timing:
-                    WritePostfix('m', 's');
-                    return;
-            }
-        }
-
-        public void WritePostfix(char c)
-        {
-            _buffer[_position++] = (byte)'|';
-            _buffer[_position++] = (byte)c;
-        }
-
-        public void WritePostfix(char c1, char c2)
-        {
-            _buffer[_position++] = (byte)'|';
-            _buffer[_position++] = (byte)c1;
-            _buffer[_position++] = (byte)c2;
-        }
-
         public void WriteSeparator()
         {
             _buffer[_position++] = (byte)'\n';
@@ -137,6 +108,28 @@ namespace Codestellation.Statsd.Internals
         public void Reset()
         {
             _position = 0;
+        }
+
+        public unsafe void WritePostfix(int postfix)
+        {
+            const byte separator = (byte)'|';
+            fixed (byte* d = &_buffer[_position])
+            {
+                switch (((byte*)&postfix)[0])
+                {
+                    case 1:
+                        d[0] = separator;
+                        d[1] = ((byte*)&postfix)[1];
+                        _position += 2;
+                        break;
+                    case 2:
+                        d[0] = separator;
+                        d[1] = ((byte*)&postfix)[1];
+                        d[2] = ((byte*)&postfix)[2];
+                        _position += 3;
+                        break;
+                }
+            }
         }
     }
 }

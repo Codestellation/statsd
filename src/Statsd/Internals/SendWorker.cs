@@ -66,7 +66,7 @@ namespace Codestellation.Statsd.Internals
 
                 _writer.WriteName(metric.Name);
                 _writer.WriteValue(metric.Value);
-                _writer.WritePostfix(metric.Type);
+                _writer.WritePostfix(metric.Postfix);
 
                 if (_writer.MtuExceeded)
                 {

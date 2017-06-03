@@ -20,7 +20,6 @@ namespace Codestellation.Statsd.Bench
         private Metric _metric7;
         private Metric _metric8;
 
-
         public StatsdWriterBenchmark()
         {
             _writer = new StatsdWriter("test");
@@ -35,41 +34,40 @@ namespace Codestellation.Statsd.Bench
             _metric8 = new Metric(new Timing("time", 12345678));
         }
 
-
         [Benchmark(Baseline = true)]
         public void Write_metric_three_calls()
         {
             _writer.WriteName(_metric1.Name);
             _writer.WriteValue(_metric1.Value);
-            _writer.WritePostfix('m', 's');
+            _writer.WritePostfix(_metric1.Postfix);
 
             _writer.WriteName(_metric2.Name);
-            _writer.WriteValue(_metric3.Value);
-            _writer.WritePostfix('m', 's');
+            _writer.WriteValue(_metric2.Value);
+            _writer.WritePostfix(_metric2.Postfix);
 
             _writer.WriteName(_metric3.Name);
-            _writer.WriteValue(_metric4.Value);
-            _writer.WritePostfix('m', 's');
+            _writer.WriteValue(_metric3.Value);
+            _writer.WritePostfix(_metric3.Postfix);
 
             _writer.WriteName(_metric4.Name);
             _writer.WriteValue(_metric4.Value);
-            _writer.WritePostfix('m', 's');
+            _writer.WritePostfix(_metric4.Postfix);
 
             _writer.WriteName(_metric5.Name);
             _writer.WriteValue(_metric5.Value);
-            _writer.WritePostfix('m', 's');
+            _writer.WritePostfix(_metric5.Postfix);
 
             _writer.WriteName(_metric6.Name);
             _writer.WriteValue(_metric6.Value);
-            _writer.WritePostfix('m', 's');
+            _writer.WritePostfix(_metric6.Postfix);
 
             _writer.WriteName(_metric7.Name);
             _writer.WriteValue(_metric7.Value);
-            _writer.WritePostfix('m', 's');
+            _writer.WritePostfix(_metric7.Postfix);
 
             _writer.WriteName(_metric8.Name);
             _writer.WriteValue(_metric8.Value);
-            _writer.WritePostfix('m', 's');
+            _writer.WritePostfix(_metric8.Postfix);
 
             _writer.Reset();
         }
