@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Codestellation.Statsd.Channels;
 using Codestellation.Statsd.Internals;
 
@@ -35,34 +34,24 @@ namespace Codestellation.Statsd
         /// <inheritdoc />
         public void LogCount(Count count1)
         {
-            Write(count1);
-            Send();
+            LogMetric(count1);
         }
 
         /// <inheritdoc />
         public void LogCount(Count count1, Count count2)
         {
-            Write(count1);
-            _writer.WriteSeparator();
-            Write(count2);
-
-            Send();
+            LogMetric(count1, count2);
         }
 
         /// <inheritdoc />
         public void LogCount(Count count1, Count count2, Count count3)
         {
-            Write(count1);
-            _writer.WriteSeparator();
-            Write(count2);
-            _writer.WriteSeparator();
-            Write(count3);
-
-            Send();
+            LogMetric(count1, count2, count3);
         }
 
         /// <inheritdoc />
-        public void LogCount<TCounts>(TCounts counts) where TCounts : IEnumerable<Count>
+        public void LogCount<TCounts>(TCounts counts)
+            where TCounts : IEnumerable<Count>
         {
             if (counts == null)
             {
@@ -75,7 +64,7 @@ namespace Codestellation.Statsd
                 {
                     _writer.WriteSeparator();
                 }
-                Write(count);
+                WriteMetric(count);
                 if (_writer.MtuExceeded)
                 {
                     Send();
@@ -90,34 +79,24 @@ namespace Codestellation.Statsd
         /// <inheritdoc />
         public void LogGauge(Gauge gauge)
         {
-            Write(gauge);
-            Send();
+            LogMetric(gauge);
         }
 
         /// <inheritdoc />
         public void LogGauge(Gauge gauge1, Gauge gauge2)
         {
-            Write(gauge1);
-            _writer.WriteSeparator();
-            Write(gauge2);
-
-            Send();
+            LogMetric(gauge1, gauge2);
         }
 
         /// <inheritdoc />
         public void LogGauge(Gauge gauge1, Gauge gauge2, Gauge gauge3)
         {
-            Write(gauge1);
-            _writer.WriteSeparator();
-            Write(gauge2);
-            _writer.WriteSeparator();
-            Write(gauge3);
-
-            Send();
+            LogMetric(gauge1, gauge2, gauge3);
         }
 
         /// <inheritdoc />
-        public void LogGauge<TGauges>(TGauges gauges) where TGauges : IEnumerable<Gauge>
+        public void LogGauge<TGauges>(TGauges gauges)
+            where TGauges : IEnumerable<Gauge>
         {
             if (gauges == null)
             {
@@ -130,7 +109,7 @@ namespace Codestellation.Statsd
                 {
                     _writer.WriteSeparator();
                 }
-                Write(gauge);
+                WriteMetric(gauge);
                 if (_writer.MtuExceeded)
                 {
                     Send();
@@ -145,34 +124,24 @@ namespace Codestellation.Statsd
         /// <inheritdoc />
         public void LogTiming(Timing timing)
         {
-            Write(timing);
-            Send();
+            LogMetric(timing);
         }
 
         /// <inheritdoc />
         public void LogTiming(Timing timing1, Timing timing2)
         {
-            Write(timing1);
-            _writer.WriteSeparator();
-            Write(timing2);
-
-            Send();
+            LogMetric(timing1, timing2);
         }
 
         /// <inheritdoc />
         public void LogTiming(Timing timing1, Timing timing2, Timing timing3)
         {
-            Write(timing1);
-            _writer.WriteSeparator();
-            Write(timing2);
-            _writer.WriteSeparator();
-            Write(timing3);
-
-            Send();
+            LogMetric(timing1, timing2, timing3);
         }
 
         /// <inheritdoc />
-        public void LogTiming<TTimings>(TTimings timings) where TTimings : IEnumerable<Timing>
+        public void LogTiming<TTimings>(TTimings timings)
+            where TTimings : IEnumerable<Timing>
         {
             if (timings == null)
             {
@@ -185,7 +154,7 @@ namespace Codestellation.Statsd
                 {
                     _writer.WriteSeparator();
                 }
-                Write(timing);
+                WriteMetric(timing);
                 if (_writer.MtuExceeded)
                 {
                     Send();
@@ -197,32 +166,44 @@ namespace Codestellation.Statsd
             }
         }
 
-        private void Write(Timing timing)
-        {
-            _writer.WriteName(timing.Name);
-            _writer.WriteValue(timing.Value);
-            _writer.WritePostfix(Postfix.Timing);
-        }
-
-
-        private void Write(Gauge gauge)
-        {
-            _writer.WriteName(gauge.Name);
-            _writer.WriteValue(gauge.Value);
-            _writer.WritePostfix(Postfix.Gauge);
-        }
-
         private void Send()
         {
             _channel.Send(_writer.Buffer, _writer.Position);
             _writer.Reset();
         }
 
-        private void Write(Count count)
+        private void LogMetric(Metric metric)
         {
-            _writer.WriteName(count.Name);
-            _writer.WriteValue(count.Value);
-            _writer.WritePostfix(Postfix.Count);
+            WriteMetric(metric);
+            Send();
+        }
+
+        private void LogMetric(Metric metric1, Metric metric2)
+        {
+            WriteMetric(metric1);
+            _writer.WriteSeparator();
+            WriteMetric(metric2);
+
+            Send();
+        }
+
+        /// <inheritdoc />
+        private void LogMetric(Metric metric1, Metric metric2, Metric metric3)
+        {
+            WriteMetric(metric1);
+            _writer.WriteSeparator();
+            WriteMetric(metric2);
+            _writer.WriteSeparator();
+            WriteMetric(metric3);
+
+            Send();
+        }
+
+        private void WriteMetric(Metric metric)
+        {
+            _writer.WriteName(metric.Name);
+            _writer.WriteValue(metric.Value);
+            _writer.WritePostfix(metric.Postfix);
         }
     }
 }

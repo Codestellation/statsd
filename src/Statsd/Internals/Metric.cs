@@ -27,5 +27,20 @@
             Name = name;
             Value = value;
         }
+
+        public static implicit operator Metric(Count count)
+        {
+            return new Metric(count);
+        }
+
+        public static implicit operator Metric(Gauge gauge)
+        {
+            return new Metric(gauge);
+        }
+
+        public static implicit operator Metric(Timing timing)
+        {
+            return new Metric(timing);
+        }
     }
 }
