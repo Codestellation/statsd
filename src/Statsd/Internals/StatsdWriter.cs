@@ -29,7 +29,7 @@ namespace Codestellation.Statsd.Internals
             _stringCache = new Dictionary<string, byte[]>(StringComparer.Ordinal);
         }
 
-        public void WriteName(string name)
+        public unsafe void WriteName(string name)
         {
             byte[] utf8Array;
             if (!_stringCache.TryGetValue(name, out utf8Array))
@@ -38,8 +38,25 @@ namespace Codestellation.Statsd.Internals
                 utf8Array = Encoding.GetBytes(fullname);
                 _stringCache[name] = utf8Array;
             }
-            //TODO: Check out a better way to copy name from cache
-            Array.Copy(utf8Array, 0, _buffer, _position, utf8Array.Length);
+            var copied = 0;
+            var maxLong = utf8Array.Length / sizeof(long);
+            fixed (byte* s = utf8Array)
+            fixed (byte* t = &_buffer[_position])
+            {
+                long* lsp = (long*)s;
+                long* tsp = (long*)t;
+
+                for (int i = 0; i < maxLong; i++)
+                {
+                    tsp[i] = lsp[i];
+                    copied += sizeof(long);
+                }
+
+                for (int i = copied; i < utf8Array.Length; i++)
+                {
+                    t[i] = s[i];
+                }
+            }
             _position += utf8Array.Length;
         }
 
