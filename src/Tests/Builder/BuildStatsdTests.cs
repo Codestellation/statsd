@@ -13,7 +13,6 @@ namespace Codestellation.Statsd.Tests.Builder
 
             var actual = BuildStatsd.From(uri);
 
-
             actual.Should().BeOfType<BackgroundStatsdClient>();
         }
 
@@ -23,7 +22,6 @@ namespace Codestellation.Statsd.Tests.Builder
             var uri = "udp://localhost:8181?prefix=test&background=false";
 
             var actual = BuildStatsd.From(uri);
-
 
             actual.Should().BeOfType<StatsdClient>();
         }

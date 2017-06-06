@@ -8,6 +8,10 @@
     
   </PropertyGroup>
 
+  <PropertyGroup>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="benchmarkdotnet" Version="0.10.6" />
   </ItemGroup>
