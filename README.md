@@ -73,8 +73,24 @@ client.LogTiming(new Timing("processing.time", 983));
 client.LogCount("oranges", 11);
 client.LogGauge("watermark", 42);
 client.LogTiming("processing.time", 983);
+```
 
+## Static statsd client usage
 
+It's possible to use static instance of  `IStatsdClient` through static class `GlobalStatsd`. Before using it call `Configure(Uri)` method. Due to thread safety reasons it's recommended to use static `GlobalStatsd` with background client only.
+
+```
+//Configure GlobalStatsd instance
+var uri = new Uri("udp://my-host:8085?prefix=the.service&ignore_exceptions");
+GlobalStatsd.Configure(uri);
+
+// After configuration either send metrics using static methods
+GlobalStatsd.LogCount("count", 1);
+GlobalStatsd.LogGauge("gauge", 2);
+GlobalStatsd.LogTiming("timing", 42);
+
+// Or access IStatsdClient to send metrics using it's instance and extension methods
+var client = GlobalStatsd.Client;
 ```
 
 ## Timing measure
@@ -85,10 +101,13 @@ and thus it's usage produce a bit of pressure of on garbage collectior.
 ```
 var client = BuildStatsd.From("udp://my-host:8085");
 var leanStopwatch = LeanStopwatch.StartNew();
+
 //Do some stuff. 
 var timing = leanStopWatch.Elapsed("eating.cookies");
+
 //Log the measurement using IStatsdClient. 
 client.LogTiming(timing);
+
 //Or use it's extension method which accepts LeanStopwatch instance
 client.LogTiming("eating.cookies", leanStopwatch);
 ```
