@@ -104,5 +104,14 @@ namespace Codestellation.Statsd.Internals
                 return 0;
             }
         }
+
+        //NOTE this method mostly used to stop background worker faster. 
+        public void Stop()
+        {
+            lock (_queue)
+            {
+                Monitor.PulseAll(_queue);
+            }
+        }
     }
 }

@@ -78,7 +78,8 @@ namespace Codestellation.Statsd.Internals
         public void Dispose()
         {
             _source.Cancel();
-            _task.Wait();
+            _queue.Stop();
+            (_channel as IDisposable)?.Dispose();
         }
     }
 }

@@ -8,13 +8,13 @@ namespace Codestellation.Statsd
     /// <summary>
     /// Sends metrics in a synchrounous manner. <remarks>This class is not thread safe. See <see cref="BackgroundStatsdClient"/> for thread safe</remarks>
     /// </summary>
-    public class StatsdClient : IStatsdClient
+    public class StatsdClient : IStatsdClient, IDisposable
     {
         private readonly StatsdWriter _writer;
         private readonly IChannel _channel;
 
         /// <summary>
-        /// Creates a new intance of <see cref="StatsdClient"/> class.
+        /// Creates a new instance of <see cref="StatsdClient"/> class.
         /// </summary>
         /// <param name="channel">A channel to send data to statsd server. Possible implementations are <see cref="UdpChannel"/> and <see cref="TcpChannel"/></param>
         /// <param name="prefix">Prefix which is will be for every metric.</param>
@@ -204,6 +204,12 @@ namespace Codestellation.Statsd
             _writer.WriteName(metric.Name);
             _writer.WriteValue(metric.Value);
             _writer.WritePostfix(metric.Postfix);
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            (_channel as IDisposable)?.Dispose();
         }
     }
 }

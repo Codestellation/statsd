@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Codestellation.Statsd.Channels;
 using FluentAssertions;
 using Xunit;
 
@@ -13,6 +14,16 @@ namespace Codestellation.Statsd.Tests
         {
             _channel = new LoggingChannel();
             _client = new BackgroundStatsdClient(_channel);
+        }
+
+        [Fact]
+        public void Should_not_fail_on_dispose()
+        {
+            var channel = new UdpChannel("localhost", 8125);
+            var client = new BackgroundStatsdClient(channel);
+
+            client.Dispose();
+            client.Dispose();
         }
 
         [Fact]
