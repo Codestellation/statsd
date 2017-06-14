@@ -25,7 +25,6 @@ namespace Codestellation.Statsd.Channels
             _settings = settings;
 
             _udpClient = new UdpClient();
-            TryConnect();
         }
 
         /// <summary>
