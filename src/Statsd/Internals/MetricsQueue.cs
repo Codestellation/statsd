@@ -8,14 +8,15 @@ namespace Codestellation.Statsd.Internals
     {
         private readonly Queue<Metric> _queue;
 
-        public MetricsQueue(int initialQueueSize = 10000)
+        public MetricsQueue(int initialQueueSize)
         {
-            if (initialQueueSize <= 0)
+            if (initialQueueSize < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(initialQueueSize), initialQueueSize, "Must be greater than 0");
+                throw new ArgumentOutOfRangeException(nameof(initialQueueSize), initialQueueSize, "Must be not less than 0");
             }
-
-            _queue = new Queue<Metric>(initialQueueSize);
+            _queue = initialQueueSize > 0
+                ? new Queue<Metric>(initialQueueSize)
+                : new Queue<Metric>();
         }
 
         public void EnqueueCounts<TCounts>(TCounts counts) where TCounts : IEnumerable<Count>

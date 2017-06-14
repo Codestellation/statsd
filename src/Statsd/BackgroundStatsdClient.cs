@@ -18,7 +18,7 @@ namespace Codestellation.Statsd
         /// <param name="channel">Channel to send metrics to</param>
         /// <param name="prefix">Prefix which is will be for every metric.</param>
         /// <param name="initialQueueSize">Initial size of queue for background metrics</param>
-        public BackgroundStatsdClient(IChannel channel, string prefix = null, int initialQueueSize = 10000)
+        public BackgroundStatsdClient(IChannel channel, string prefix = null, int initialQueueSize = 0)
         {
             if (channel == null)
             {
