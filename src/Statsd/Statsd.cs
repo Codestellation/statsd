@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Codestellation.Statsd.Builder;
 using Codestellation.Statsd.Internals;
 
@@ -12,8 +13,11 @@ namespace Codestellation.Statsd
         private static IStatsdClient _statsdClient = new StubClient();
 
         /// <summary>
-        /// Gets underlying instance of <see cref="IStatsdClient"/>
-        /// <remarks>Call <see cref="Configure(string)"/> or <see cref="Configure(Uri)"/> before using the property. By default it returns stub implementation which simply swallows all supplied metrics.</remarks>
+        /// Gets underlying instance of <see cref="IStatsdClient"/>. Avoid caching the property value anywhere else. 
+        /// <remarks>
+        /// Call <see cref="Configure(string)"/> or <see cref="Configure(Uri)"/> before using the property. By default it returns stub implementation which simply swallows all supplied metrics.
+        /// You can call <see cref="Dispose"/> to stop current implementation of <see cref="IStatsdClient"/> to prevent further metrics sending
+        /// </remarks>
         /// </summary>
         public static IStatsdClient Client => _statsdClient;
 
@@ -87,6 +91,21 @@ namespace Codestellation.Statsd
         public static void LogTiming(string name, LeanStopwatch stopwatch)
         {
             _statsdClient.LogTiming(stopwatch.Elapsed(name));
+        }
+
+        /// <summary>
+        /// Disposes current instance of <see cref="Client"/> and replaces it with stub implementation
+        /// </summary>
+        public static void Dispose()
+        {
+#if NET40
+            var client = _statsdClient;
+            Thread.MemoryBarrier();
+#else
+            var client = Volatile.Read(ref _statsdClient);
+#endif
+            _statsdClient = new StubClient();
+            (client as IDisposable)?.Dispose();
         }
     }
 }
