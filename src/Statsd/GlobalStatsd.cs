@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using Codestellation.Statsd.Builder;
 using Codestellation.Statsd.Internals;
@@ -80,7 +80,7 @@ namespace Codestellation.Statsd
         /// <param name="value">Time interval in milliseconds</param>
         public static void LogTiming(string name, int value)
         {
-            _statsdClient.LogGauge(name, value);
+            _statsdClient.LogTiming(name, value);
         }
 
         /// <summary>
