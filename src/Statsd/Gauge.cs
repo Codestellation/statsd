@@ -5,7 +5,7 @@ namespace Codestellation.Statsd
     /// <summary>
     /// Represents a statsd gauge metric value
     /// </summary>
-    public struct Gauge
+    public readonly struct Gauge
     {
         /// <summary>
         /// Name of the metric

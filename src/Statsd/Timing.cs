@@ -5,7 +5,7 @@ namespace Codestellation.Statsd
     /// <summary>
     /// Represents a statsd timing metric value
     /// </summary>
-    public struct Timing
+    public readonly struct Timing
     {
         /// <summary>
         /// Name of the metric

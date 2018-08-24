@@ -10,7 +10,7 @@ namespace Codestellation.Statsd
     /// So just call to <see cref="Elapsed"/> or <see cref="Elapsed(string)"/> to get time elapsed from the <see cref="StartNew"/> call.
     /// </remarks>
     /// </summary>
-    public struct LeanStopwatch
+    public readonly struct LeanStopwatch
     {
         private readonly long _startedAt;
 

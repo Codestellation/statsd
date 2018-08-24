@@ -5,7 +5,7 @@ namespace Codestellation.Statsd
     /// <summary>
     /// Represents a statsd count value
     /// </summary>
-    public struct Count
+    public readonly struct Count
     {
         /// <summary>
         /// Name of the metric
