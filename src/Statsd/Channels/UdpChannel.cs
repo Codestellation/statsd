@@ -49,11 +49,8 @@ namespace Codestellation.Statsd.Channels
             {
                 return;
             }
-            if (!_udpClient.Client.Connected)
-            {
-                TryConnect();
-            }
-            if (_udpClient.Client.Connected)
+            
+            if (TryConnect())
             {
                 _udpClient.Client.Send(buffer, count, SocketFlags.None);
             }
@@ -69,11 +66,16 @@ namespace Codestellation.Statsd.Channels
 #endif
         }
 
-        private void TryConnect()
+        private bool TryConnect()
         {
+            if (_udpClient.Client.Connected)
+            {
+                return true;
+            }
             try
             {
                 _udpClient.Client.Connect(_settings.Host, _settings.Port);
+                return true;
             }
             catch (SocketException e)
             {
@@ -84,6 +86,8 @@ namespace Codestellation.Statsd.Channels
                     throw new InvalidOperationException(message, e);
                 }
             }
+
+            return false;
         }
     }
 }
