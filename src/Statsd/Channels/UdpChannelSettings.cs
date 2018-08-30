@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Sockets;
 using Codestellation.Statsd.Builder;
 
@@ -9,13 +10,15 @@ namespace Codestellation.Statsd.Channels
     /// </summary>
     public class UdpChannelSettings
     {
+        private AddressFamily _addressFamily;
+
         /// <summary>
         /// Statsd server host. Must be either valid ip address or dns name
         /// </summary>
         public string Host { get; set; }
 
         /// <summary>
-        /// Port a statsd server listens to
+        /// Port a statsd server listens to. Typical value is 8125.
         /// </summary>
         public int Port { get; set; }
 
@@ -23,7 +26,37 @@ namespace Codestellation.Statsd.Channels
         /// <see cref="UdpChannel"/> will throw error if any <see cref="SocketException"/> happens.
         /// </summary>
         public bool IgnoreSocketExceptions { get; set; }
+        /// <summary>
+        /// How often to check for dns changes in minutes. 
+        /// </summary>
+        public int DnsUpdatePeriod { get; set; }
 
+        /// <summary>
+        /// Gets of sets current family for the underlying socket.  
+        /// </summary>
+        public AddressFamily AddressFamily
+        {
+            get => _addressFamily;
+            set
+            {
+                if (value == AddressFamily.InterNetwork || value == AddressFamily.InterNetworkV6)
+                {
+                    _addressFamily = value;
+                    return;
+                }
+                var message = $"Must be either {AddressFamily.InterNetworkV6.ToString()} or {AddressFamily.InterNetwork.ToString()} but was {value.ToString()}";
+                throw new ArgumentException(message);
+            }
+        }
+        /// <summary>
+        /// Initializes a new instance of <see cref="UdpChannelSettings"/>
+        /// </summary>
+        public UdpChannelSettings()
+        {
+            DnsUpdatePeriod = 10;
+            AddressFamily = AddressFamily.InterNetwork;
+        }
+        
         /// <summary>
         /// Validates settings and throws an exception in case of invalid settings
         /// </summary>
@@ -55,13 +88,15 @@ namespace Codestellation.Statsd.Channels
                 throw new ArgumentException($"Uri scheme must be udp but was {uri.Scheme}");
             }
 
-            var values = uri.GetQueryValues();
+            Dictionary<string, string> values = uri.GetQueryValues();
 
             return new UdpChannelSettings
             {
                 Host = uri.Host,
                 Port = uri.Port,
-                IgnoreSocketExceptions = values.ParseOrDefault(UriParseExtensions.IgnoreExceptions, onDefault: true)
+                IgnoreSocketExceptions = values.ParseOrDefault(UriParseExtensions.IgnoreExceptions, onDefault: true),
+                DnsUpdatePeriod = values.ParseOrDefault(UriParseExtensions.DnsUpdatePeriod, onDefault: 10),
+                AddressFamily = values.ContainsKey("IPv6") ? AddressFamily.InterNetworkV6 : AddressFamily.InterNetwork
             };
         }
     }

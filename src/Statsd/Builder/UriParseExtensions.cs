@@ -8,6 +8,7 @@ namespace Codestellation.Statsd.Builder
         public const string Background = "background";
         public const string IgnoreExceptions = "ignore_exceptions";
         public const string Prefix = "prefix";
+        public const string DnsUpdatePeriod = "dns_update_period";
 
         public static Dictionary<string, string> GetQueryValues(this Uri self)
         {
@@ -52,6 +53,16 @@ namespace Codestellation.Statsd.Builder
             if (self.TryGetValue(key, out candidate) && !string.IsNullOrWhiteSpace(candidate))
             {
                 return candidate;
+            }
+            return onDefault;
+        }
+        
+        public static int ParseOrDefault(this IDictionary<string, string> self, string key, int onDefault = 0)
+        {
+            string candidate;
+            if (self.TryGetValue(key, out candidate) && !string.IsNullOrWhiteSpace(candidate) && int.TryParse(candidate, out int result))
+            {
+                return result;
             }
             return onDefault;
         }
