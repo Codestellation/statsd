@@ -33,7 +33,9 @@ var settings = new UdpChannelSettings
 {
     Host = "my-host",
     IgnoreSocketExceptions = true,
-    Port = 8085
+    Port = 8085,
+    AddressFamily = AddressFamily.InterNetworkV6,
+    DnsUpdatePeriod = 15 //minutes 
 };
 var channel = new UdpChannel(settings);
 var client = new StatsdClient(channel, prefix:"ideal");
@@ -49,7 +51,7 @@ client.LogCount("oranges", 11);
 ## Configuration by URI
 
 ```
-var uri = "udp://my-host:8085?prefix=the.service&background=false&ignore_exceptions=true";
+var uri = "udp://my-host:8085?prefix=the.service&background=false&ignore_exceptions=true&dns_update_period=15&IPv6";
 
 IStatsdClient actual = BuildStatsd.From(uri);
 ```
@@ -57,6 +59,8 @@ IStatsdClient actual = BuildStatsd.From(uri);
 * `prefix` - a prefix which will be applied before every metric name. Default value is `string.Empty`
 * `background` - which kind of client should be used - `BackgroundStatsdClient` or synchronous `StatsdClient`. Default value is true.  Note  `udp://my-host:8085?background=true` and `udp://my-host:8085?background` are treated equally. 
 * `ignore_exceptions` - ignore any `SocketException` when sending metrics. Default value is false. `udp://my-host:8085?ignore_exceptions=true` and `udp://my-host:8085?ignore_exceptions` are treated equally.
+* `dns_update_period` - How often to check for dns changes in minutes. Default value is 10 minutes. 
+* `IPv6` - use IPv6 address family. 
 
 
 ## Sending metrics
