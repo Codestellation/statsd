@@ -1,11 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Blazingly Fast Statsd Client for .NET Standard and .NET Framework 4.0+</Description>
+    <Description>
+Blazingly Fast Statsd Client for .NET Standard 1.6+ and .NET Framework 4.0+. 
+It doesn't use any kind of string manipulation and doesn't allocate new buffers and thus generates no work for GC. Very few objecs are allocated during perodic DNS resolution routine.</Description>
     <AssemblyTitle>Codestellation Statsd</AssemblyTitle>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Authors>Jury Soldatenkov</Authors>
-    <TargetFrameworks>netstandard1.6;net40;net45;net46</TargetFrameworks>
+    <TargetFrameworks>netstandard1.6;netstandard2.0;net40;net45;net46</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Codestellation.Statsd</AssemblyName>
     <PackageId>Codestellation.Statsd</PackageId>
@@ -16,8 +18,9 @@
     <RepositoryUrl>git://github.com/Codestellation/statsd</RepositoryUrl>
     <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.6' ">$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <PackageReleaseNotes>
-        #2 Created Lean Stopwatch to measure timings
-        #4 Support for .NET 4.0
+#5 Handle DNS Changes
+#7 Writer better description for the package
+#11 Support for .NET 4.0
     </PackageReleaseNotes>
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.6' ">1.6.0</NetStandardImplicitPackageVersion>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
