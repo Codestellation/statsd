@@ -10,4 +10,4 @@ environment:
   myget_key:
     secure: RMt+ThGgrTCbyy4LE/1rd+i1tT815ahgCMMjzXyLs6f/SvW8XGKRts2agrVXovYD
   nuget_key:
-    secure: DatmG8UQ6XXquQJI+TIdDkHrZzCJPmQPOMWSGDRF7A0pYh4geU7UE7+t4iUX+oU+
+    secure: vqrPuTWp4DIDsTAfuSwcpdSVCDMxBD292t/pllsr5zNfJiBLBunASyMclwDJRJWU
