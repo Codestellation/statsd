@@ -6,7 +6,7 @@ namespace Codestellation.Statsd
     /// <summary>
     /// Represent analogue to <see cref="Stopwatch"/>, but do not produce garbage.
     /// <remarks>
-    /// Because <see cref="LeanStopwatch"/> is an immutable value type, it's impossible to create methods Stop method like <see cref="Stopwatch"/> does. 
+    /// Because <see cref="LeanStopwatch"/> is an immutable value type, it's impossible to create methods Stop method like <see cref="Stopwatch"/> does.
     /// So just call to <see cref="Elapsed"/> or <see cref="Elapsed(string)"/> to get time elapsed from the <see cref="StartNew"/> call.
     /// </remarks>
     /// </summary>
@@ -24,11 +24,15 @@ namespace Codestellation.Statsd
         /// </summary>
         public TimeSpan ElapsedTimeSpan
         {
-            get => TimeSpan.FromTicks(Stopwatch.GetTimestamp() - _startedAt);
+            get
+            {
+                double stopwatchTicks = Stopwatch.GetTimestamp() - _startedAt;
+                return TimeSpan.FromSeconds(stopwatchTicks / Stopwatch.Frequency);
+            }
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="LeanStopwatch"/> structure. 
+        /// Initializes a new instance of <see cref="LeanStopwatch"/> structure.
         /// </summary>
         public static LeanStopwatch StartNew() => new LeanStopwatch(Stopwatch.GetTimestamp());
 
