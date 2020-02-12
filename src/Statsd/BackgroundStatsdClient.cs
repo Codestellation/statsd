@@ -18,7 +18,8 @@ namespace Codestellation.Statsd
         /// <param name="channel">Channel to send metrics to</param>
         /// <param name="prefix">Prefix which is will be for every metric.</param>
         /// <param name="initialQueueSize">Initial size of queue for background metrics</param>
-        public BackgroundStatsdClient(IChannel channel, string prefix = null, int initialQueueSize = 0)
+        /// <param name="exceptionHandler">Action to perform on an unhandled exception. Most commoly it's used for logging</param>
+        public BackgroundStatsdClient(IChannel channel, string prefix = null, int initialQueueSize = 0, Action<Exception> exceptionHandler = null)
         {
             if (channel == null)
             {
@@ -31,7 +32,7 @@ namespace Codestellation.Statsd
                 throw new ArgumentException(message, nameof(prefix));
             }
             _queue = new MetricsQueue(initialQueueSize);
-            _sender = new SendWorker(_queue, channel, prefix);
+            _sender = new SendWorker(_queue, channel, prefix, exceptionHandler);
         }
 
         /// <inheritdoc />

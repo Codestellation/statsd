@@ -20,14 +20,15 @@ namespace Codestellation.Statsd.Builder
         /// </code>
         /// </example>
         /// <param name="uri">Well formed uri string</param>
-        public static IStatsdClient From(string uri)
+        /// <param name="exceptionHandler">Action to perform on an unhandled exception. Most commoly it's used for logging</param>
+        public static IStatsdClient From(string uri, Action<Exception> exceptionHandler = null)
         {
             if (string.IsNullOrWhiteSpace(uri))
             {
                 const string message = "Uri string should have format 'udp://host:port?prefix=my_prefix&background&ignore_exceptions'";
                 throw new ArgumentException(message, nameof(uri));
             }
-            return From(new Uri(uri));
+            return From(new Uri(uri), exceptionHandler);
         }
 
         /// <summary>
@@ -42,7 +43,8 @@ namespace Codestellation.Statsd.Builder
         /// </code>
         /// </example>
         /// <param name="uri">Well formed uri string</param>
-        public static IStatsdClient From(Uri uri)
+        /// <param name="exceptionHandler">Action to perform on an unhandled exception. Most commoly it's used for logging</param>
+        public static IStatsdClient From(Uri uri, Action<Exception> exceptionHandler = null)
         {
             if (uri == null)
             {
@@ -56,7 +58,7 @@ namespace Codestellation.Statsd.Builder
 
             if (background)
             {
-                return new BackgroundStatsdClient(channel, prefix);
+                return new BackgroundStatsdClient(channel, prefix, exceptionHandler: exceptionHandler);
             }
 
             return new StatsdClient(channel, prefix);

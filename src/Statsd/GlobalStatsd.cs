@@ -15,7 +15,7 @@ namespace Codestellation.Statsd
         /// <summary>
         /// Gets underlying instance of <see cref="IStatsdClient"/>. Avoid caching the property value anywhere else. 
         /// <remarks>
-        /// Call <see cref="Configure(string)"/> or <see cref="Configure(Uri)"/> before using the property. By default it returns stub implementation which simply swallows all supplied metrics.
+        /// Call <see cref="Configure(string)"/> or <see cref="Configure(System.Uri,System.Action{System.Exception})"/> before using the property. By default it returns stub implementation which simply swallows all supplied metrics.
         /// You can call <see cref="Dispose"/> to stop current implementation of <see cref="IStatsdClient"/> to prevent further metrics sending
         /// </remarks>
         /// </summary>
@@ -32,9 +32,10 @@ namespace Codestellation.Statsd
         /// </code>
         /// </summary>
         /// <param name="uri">Parameter of the statsd client </param>
-        public static void Configure(string uri)
+        /// <param name="exceptionHandler">Action to perform on an unhandled exception. Most commoly it's used for logging</param>
+        public static void Configure(string uri, Action<Exception> exceptionHandler = null)
         {
-            Configure(new Uri(uri));
+            Configure(new Uri(uri), exceptionHandler);
         }
 
         /// <summary>
@@ -48,9 +49,10 @@ namespace Codestellation.Statsd
         /// </code>
         /// /// </summary>
         /// <param name="uri">Parameter of the statsd client </param>
-        public static void Configure(Uri uri)
+        /// <param name="exceptionHandler">Action to perform on an unhandled exception. Most commoly it's used for logging</param>
+        public static void Configure(Uri uri, Action<Exception> exceptionHandler = null)
         {
-            _statsdClient = BuildStatsd.From(uri);
+            _statsdClient = BuildStatsd.From(uri, exceptionHandler);
         }
 
         /// <summary>

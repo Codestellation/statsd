@@ -10,14 +10,16 @@ namespace Codestellation.Statsd.Internals
 
         private readonly MetricsQueue _queue;
         private readonly IChannel _channel;
+        private readonly Action<Exception> _exceptionHandler;
         private readonly Metric[] _batch;
         private readonly Task _task;
         private readonly CancellationTokenSource _source;
 
-        public SendWorker(MetricsQueue queue, IChannel channel, string prefix)
+        public SendWorker(MetricsQueue queue, IChannel channel, string prefix, Action<Exception> exceptionHandler = null)
         {
             _queue = queue ?? throw new ArgumentNullException(nameof(queue));
             _channel = channel ?? throw new ArgumentNullException(nameof(channel));
+            _exceptionHandler = exceptionHandler;
             _writer = new StatsdWriter(prefix);
 
             _source = new CancellationTokenSource();
@@ -35,11 +37,19 @@ namespace Codestellation.Statsd.Internals
         {
             while (!_source.IsCancellationRequested)
             {
-                int batchSize = _queue.DequeueInto(_batch);
-
-                if (batchSize > 0)
+                try
                 {
-                    SendBatch(batchSize);
+                    int batchSize = _queue.DequeueInto(_batch);
+
+                    if (batchSize > 0)
+                    {
+                        SendBatch(batchSize);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //Socket exception must be handled at channed level. Handle here unexpected one
+                    _exceptionHandler?.Invoke(ex);
                 }
             }
         }
