@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Net.Sockets;
 
 namespace Codestellation.Statsd.Channels
 {
     /// <summary>
-    ///     A UDP channel to send data to a statsd server. This is a recommended channel.
+    /// A UDP channel to send data to a statsd server. This is a recommended channel.
     /// </summary>
     public class UdpChannel : IChannel, IDisposable
     {
@@ -16,24 +16,33 @@ namespace Codestellation.Statsd.Channels
         private Socket _udpSocket;
 
         /// <summary>
-        ///     Creates a new instance of <see cref="UdpChannel" /> class
+        /// Creates a new instance of <see cref="UdpChannel" /> class
         /// </summary>
         /// <param name="settings">Udp channel settings</param>
         public UdpChannel(UdpChannelSettings settings)
         {
-            if (settings == null) throw new ArgumentNullException(nameof(settings));
+            if (settings == null)
+            {
+                throw new ArgumentNullException(nameof(settings));
+            }
+
             settings.Validate();
             _settings = settings;
             _addresses = new IPAddress[0];
         }
 
         /// <summary>
-        ///     Creates a new instance of <see cref="UdpChannel" /> class
+        /// Creates a new instance of <see cref="UdpChannel" /> class
         /// </summary>
         /// <param name="hostname">Statsd server host. Must be either valid ip address or dns name</param>
         /// <param name="port">Port a statsd server listens to</param>
         public UdpChannel(string hostname, int port)
-            : this(new UdpChannelSettings {Host = hostname, Port = port, DnsUpdatePeriod = 10})
+            : this(new UdpChannelSettings
+            {
+                Host = hostname,
+                Port = port,
+                DnsUpdatePeriod = 10
+            })
         {
         }
 
@@ -84,12 +93,12 @@ namespace Codestellation.Statsd.Channels
 
             if (IPAddress.TryParse(_settings.Host, out IPAddress ipAddress))
             {
-                _nextDnsCheckAt = Int64.MaxValue; //it's already ip address, don't have to resolve dns ever
-                _addresses = new[] {ipAddress};
+                _nextDnsCheckAt = long.MaxValue; //it's already ip address, don't have to resolve dns ever
+                _addresses = new[] { ipAddress };
                 return true;
             }
-            
-            var minutes = _settings.DnsUpdatePeriod * 60 * 1000; //minutes * seconds_per_minute * ms_per_second
+
+            int minutes = _settings.DnsUpdatePeriod * 60 * 1000; //minutes * seconds_per_minute * ms_per_second
             _nextDnsCheckAt = Environment.TickCount + minutes;
 
             try
@@ -104,7 +113,7 @@ namespace Codestellation.Statsd.Channels
                 {
                     return false;
                 }
-                
+
                 _addresses = addresses;
                 return true;
             }
@@ -118,9 +127,12 @@ namespace Codestellation.Statsd.Channels
 
         private bool AddressesAreSame(IPAddress[] addresses)
         {
-            if (_addresses.Length != addresses.Length) return false;
+            if (_addresses.Length != addresses.Length)
+            {
+                return false;
+            }
 
-            foreach (var ipAddress in addresses)
+            foreach (IPAddress ipAddress in addresses)
             {
                 if (Array.IndexOf(_addresses, ipAddress) < 0)
                 {
@@ -140,8 +152,8 @@ namespace Codestellation.Statsd.Channels
 
         private void HandleException(Exception e)
         {
-            var message = $"UdpChannel was not able to send data to 'udp://{_settings.Host}:{_settings.Port}'. " +
-                          "Possible reasons are invalid IP address or unresolvable DNS name.";
+            string message = $"UdpChannel was not able to send data to 'udp://{_settings.Host}:{_settings.Port}'. " +
+                             "Possible reasons are invalid IP address or unresolvable DNS name.";
             if (!_settings.IgnoreSocketExceptions)
             {
                 throw new InvalidOperationException(message, e);

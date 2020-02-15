@@ -1,4 +1,3 @@
-using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -8,13 +7,8 @@ using Xunit;
 
 namespace Codestellation.Statsd.Tests.Channels
 {
-    public class UdpChannelTests : IDisposable 
+    public class UdpChannelTests
     {
-        private Socket _server;
-        private UdpChannel _channel;
-        private byte[] _message;
-
-        
         [Theory]
         [InlineData("localhost", AddressFamily.InterNetwork)]
         [InlineData("127.0.0.1", AddressFamily.InterNetwork)]
@@ -22,34 +16,25 @@ namespace Codestellation.Statsd.Tests.Channels
         [InlineData("::1", AddressFamily.InterNetworkV6)]
         public void Should_send_bytes_over_the_network(string statsdHost, AddressFamily family)
         {
-            _server = new Socket(family, SocketType.Dgram, ProtocolType.Udp)
-            {
-                ReceiveTimeout = 3000
-            };
-            _server.Bind(new IPEndPoint(family == AddressFamily.InterNetwork ?  IPAddress.Loopback : IPAddress.IPv6Loopback, 8125));
+            using var server = new Socket(family, SocketType.Dgram, ProtocolType.Udp) { ReceiveTimeout = 3000 };
+            server.Bind(new IPEndPoint(family == AddressFamily.InterNetwork ? IPAddress.Loopback : IPAddress.IPv6Loopback, 8125));
 
-            _message = Encoding.UTF8.GetBytes("Hello server!");
-            
+            byte[] message = Encoding.UTF8.GetBytes("Hello server!");
+
             var settings = new UdpChannelSettings
             {
-                Host = statsdHost, 
+                Host = statsdHost,
                 Port = 8125,
                 AddressFamily = family
             };
-            
-            _channel = new UdpChannel(settings);
-            _channel.Send(_message, _message.Length);
-            var receiveBuffer = new byte[_message.Length];
 
-            _server.Receive(receiveBuffer);
-            
-            receiveBuffer.ShouldBeEquivalentTo(_message);
-        }
-        
-        public void Dispose()
-        {
-            _server?.Dispose();
-            _channel.Dispose();
+            using var channel = new UdpChannel(settings);
+            channel.Send(message, message.Length);
+            var receiveBuffer = new byte[message.Length];
+
+            server.Receive(receiveBuffer);
+
+            receiveBuffer.ShouldBeEquivalentTo(message);
         }
     }
 }
