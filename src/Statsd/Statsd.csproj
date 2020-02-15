@@ -1,9 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>
-Blazingly Fast Statsd Client for .NET Standard 1.6+ and .NET Framework 4.0+. 
-It doesn't use any kind of string manipulation and doesn't allocate new buffers and thus generates no work for GC. Very few objecs are allocated during perodic DNS resolution routine.</Description>
+      Blazingly Fast Statsd Client for .NET Standard 1.6+ and .NET Framework 4.0+.
+      It doesn't use any kind of string manipulation and doesn't allocate new buffers and thus generates no work for GC. Very few objecs are allocated during perodic DNS resolution routine.
+    </Description>
     <AssemblyTitle>Codestellation Statsd</AssemblyTitle>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Authors>Jury Soldatenkov</Authors>
@@ -18,29 +19,40 @@ It doesn't use any kind of string manipulation and doesn't allocate new buffers 
     <RepositoryUrl>git://github.com/Codestellation/statsd</RepositoryUrl>
     <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.6' ">$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <PackageReleaseNotes>
-#5 Handle DNS Changes
-#7 Writer better description for the package
-#11 Support for .NET 4.0
+      #5 Handle DNS Changes
+      #7 Write better description for the package
+      #11 Support for .NET 4.0
     </PackageReleaseNotes>
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.6' ">1.6.0</NetStandardImplicitPackageVersion>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <RootNamespace>Codestellation.Statsd</RootNamespace>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
-  
+
+  <PropertyGroup>
+    <ReferenceEditorConfig>https://raw.githubusercontent.com/Codestellation/Standards/master/.editorconfig</ReferenceEditorConfig>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Codestellation.Appulse" Version="0.1.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Codestellation.Cepheid" Version="0.1.2" PrivateAssets="All" />
+  </ItemGroup>
+
   <ItemGroup Condition=" '$(TargetFramework)' == 'net40' Or '$(TargetFramework)' == 'net45' Or '$(TargetFramework)' == 'net46' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
-  
+
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
     <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
   </ItemGroup>

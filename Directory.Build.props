@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+
+    <BuildOutputFolder>$(MSBuildThisFileDirectory)\build</BuildOutputFolder>
+    <BaseOutputPath>$(BuildOutputFolder)\bin\$(MSBuildProjectName)</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(BuildOutputFolder)\obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
+    <PackageOutputPath>$(BuildOutputFolder)\artifacts</PackageOutputPath>
+
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+    <LangVersion>latest</LangVersion>
+
+  </PropertyGroup>
+</Project>
