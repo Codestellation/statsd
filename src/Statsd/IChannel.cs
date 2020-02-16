@@ -1,8 +1,8 @@
-﻿namespace Codestellation.Statsd
+namespace Codestellation.Statsd
 {
     /// <summary>
     /// Represents a channel that is used to send data to a statsd server
-    /// <remarks>Implementaions are not supposed to be thread safe</remarks>
+    /// <remarks>Implementations are not supposed to be thread safe</remarks>
     /// </summary>
     public interface IChannel
     {

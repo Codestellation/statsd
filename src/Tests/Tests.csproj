@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.2;net452;net46</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net452;net46</TargetFrameworks>
     <AssemblyName>Codestellation.Statsd.Tests</AssemblyName>
     <PackageId>Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -29,11 +29,4 @@
       <Version>4.3.0</Version>
     </PackageReference>
   </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp1.0'">
-    <PackageReference Include="system.console">
-      <Version>4.3.0</Version>
-    </PackageReference>
-  </ItemGroup>
-
 </Project>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,7 +27,7 @@ namespace Codestellation.Statsd.Internals
             _task = new Task((Action)ProcessQueue, _source.Token);
             _task.Start();
 #else
-            _task = Task.Run((Action)ProcessQueue, _source.Token);
+            _task = Task.Run(ProcessQueue, _source.Token);
 #endif
 
             _batch = new Metric[50];
@@ -48,7 +48,7 @@ namespace Codestellation.Statsd.Internals
                 }
                 catch (Exception ex)
                 {
-                    //Socket exception must be handled at channed level. Handle here unexpected one
+                    //Socket exception must be handled at channel level. Handle here unexpected one
                     _exceptionHandler?.Invoke(ex);
                 }
             }
@@ -56,9 +56,9 @@ namespace Codestellation.Statsd.Internals
 
         private void SendBatch(int batchSize)
         {
-            for (int i = 0; i < batchSize; i++)
+            for (var i = 0; i < batchSize; i++)
             {
-                var metric = _batch[i];
+                Metric metric = _batch[i];
                 if (_writer.ContainsData)
                 {
                     _writer.WriteSeparator();
@@ -73,6 +73,7 @@ namespace Codestellation.Statsd.Internals
                     Send();
                 }
             }
+
             if (_writer.ContainsData)
             {
                 Send();
