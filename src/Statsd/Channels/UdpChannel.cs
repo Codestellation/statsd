@@ -74,7 +74,7 @@ namespace Codestellation.Statsd.Channels
                     InitSocket();
                 }
 
-                return _udpSocket.Connected;
+                return _udpSocket?.Connected ?? false;
             }
             catch (SocketException e)
             {

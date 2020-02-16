@@ -36,5 +36,23 @@ namespace Codestellation.Statsd.Tests.Channels
 
             receiveBuffer.ShouldBeEquivalentTo(message);
         }
+
+
+        [Fact]
+        public void Should_not_throw_if_address_is_invalid()
+        {
+            byte[] message = Encoding.UTF8.GetBytes("Hello server!");
+
+            var settings = new UdpChannelSettings
+            {
+                Host = "no.such.host.is.known",
+                Port = 8125,
+                AddressFamily = AddressFamily.InterNetwork,
+                IgnoreSocketExceptions = true
+            };
+
+            using var channel = new UdpChannel(settings);
+            channel.Send(message, message.Length);
+        }
     }
 }
